@@ -51,6 +51,8 @@ public class Driver837 {
 		
 		loops.put("2400", "Service Line Number");
 		
+		loops.put("2410", "Claim Pricing/Repricing information");
+		
 		loops.put("2420A", "Rendering Provider Name");
 		loops.put("2420B", "Asssitant Surgeon Name");
 		loops.put("2420C", "Supervising Provider Name");
@@ -70,7 +72,7 @@ public class Driver837 {
 
 		try {
 			List<String> allLines = Files.readAllLines(
-					Paths.get("C:/Users/rjilani/Documents/FEP/Payload/837-For-Demo/EDI_2503699DO01T10.txt"));
+					Paths.get("C:/Users/rjilani/Documents/FEP/Payload/837-For-Demo/EDI_Instituitional_2521316484.txt"));
 
 			System.out.println("Lines in file:" + allLines.size());
 
