@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Driver837 {
@@ -67,28 +68,37 @@ public class Driver837 {
 
 		System.out.println(loops.get("2300"));
 
+		HashMap<String, List<String>> loopsToSegements = new LinkedHashMap<>();
+
 		try {
 			List<String> allLines = Files
 					.readAllLines(Paths.get("C:/Users/rjilani/Documents/FEP/Payload/837-For-Demo/TC36.txt"));
 
 			System.out.println("Lines in file:" + allLines.size());
 
+			List<String> segments1000A = new ArrayList<>();
+			HashMap<String, List<String>> loopsSegmentsMap = new LinkedHashMap<>();
+			String loop = "";
 			for (String line : allLines) {
 				if (line.startsWith("1") || line.startsWith("2")) {
+
 					System.out
 							.println("------------------------------------------------------------------------------");
 
-					String loop = line.substring(0, 6).strip();
-					System.out.println("loop:" + loop + " " + loops.get(loop));
+					loop = line.substring(0, 6).strip();
+
+					System.out.println(
+							"loop:" + loop + " " + (loops.get(loop) != null ? loops.get(loop) : "not a valid loop"));
 
 					System.out.println("Line size:" + line.length());
 
-//				System.out.println(line.substring(78, 87));
-
 					String[] elements = line.split(" ");
 					System.out.println("total elements:" + elements.length);
-//					System.out.println("        ");
 					System.out.println(line);
+					if (loop.equals("1000A")) {
+						segments1000A.add(line);
+					}
+					
 					System.out.println("        ");
 					for (String ele : elements) {
 
@@ -101,8 +111,35 @@ public class Driver837 {
 				}
 
 			}
+			
+			printLines(segments1000A);
+			
+			if (segments1000A != null ) {
+				loopsSegmentsMap.put("1000A", segments1000A);
+			}
+			
+			iterateLoopsAndSegments(loopsSegmentsMap);
+
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static void printLines(List<String> segments) {
+		System.out
+		.println("------------------------------------------------------------------------------");
+		
+		for (String segment:segments) {
+			System.out.println(segment);
+		}
+	}
+
+	private static void iterateLoopsAndSegments(HashMap<String, List<String>> loopsToSegements) {
+		for (String key : loopsToSegements.keySet()) {
+			System.out.println("Key: " + key);
+			if (key.equals("1000A")) {
+				loopsToSegements.get(key).stream().forEach(System.out::println);
+			}
 		}
 	}
 
