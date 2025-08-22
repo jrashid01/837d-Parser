@@ -79,6 +79,8 @@ public class Driver837 {
 			List<String> segments1000A = new ArrayList<>();
 			HashMap<String, List<String>> loopsSegmentsMap = new LinkedHashMap<>();
 			String loop = "";
+			String previousLoop = "1000A";
+			int i =0;
 			for (String line : allLines) {
 				if (line.startsWith("1") || line.startsWith("2")) {
 
@@ -86,9 +88,20 @@ public class Driver837 {
 							.println("------------------------------------------------------------------------------");
 
 					loop = line.substring(0, 6).strip();
+					
+					if (!previousLoop.equals(loop)) {
+						System.out.println("previousLoop count: " + previousLoop + ":" + i);
+						System.out
+						.println("------------------------------------------------------------------------------");
+						i = 0;
+						previousLoop = loop;
+						i = 1;
+					} else {
+						i++;
+					}
 
 					System.out.println(
-							"loop:" + loop + " " + (loops.get(loop) != null ? loops.get(loop) : "not a valid loop"));
+							"loop" + loop + " " + (loops.get(loop) != null ? loops.get(loop) : "not a valid loop"));
 
 					System.out.println("Line size:" + line.length());
 
@@ -111,14 +124,19 @@ public class Driver837 {
 				}
 
 			}
+			System.out
+			.println("------------------------------------------------------------------------------");
+			System.out.println("previousLoop count: " + previousLoop + ":" + i);
+			System.out
+			.println("------------------------------------------------------------------------------");
 			
-			printLines(segments1000A);
+//			printLines(segments1000A);
 			
 			if (segments1000A != null ) {
 				loopsSegmentsMap.put("1000A", segments1000A);
 			}
 			
-			iterateLoopsAndSegments(loopsSegmentsMap);
+//			iterateLoopsAndSegments(loopsSegmentsMap);
 
 		} catch (IOException e) {
 			e.printStackTrace();
