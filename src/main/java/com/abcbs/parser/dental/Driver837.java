@@ -77,6 +77,14 @@ public class Driver837 {
 			System.out.println("Lines in file:" + allLines.size());
 
 			List<String> segments1000A = new ArrayList<>();
+			List<String> segments1000B = new ArrayList<>();
+			List<String> segments2300 = new ArrayList<>();
+			List<String> segments2400 = new ArrayList<>();
+			List<String> segments2430 = new ArrayList<>();
+			List<String> segments2330B = new ArrayList<>();
+			
+			
+			
 			HashMap<String, List<String>> loopsSegmentsMap = new LinkedHashMap<>();
 			String loop = "";
 			String previousLoop = "1000A";
@@ -112,6 +120,28 @@ public class Driver837 {
 						segments1000A.add(line);
 					}
 					
+					if (loop.equals("1000B")) {
+						segments1000B.add(line);
+					}
+					
+					if (loop.equals("2300")) {
+						segments2300.add(line);
+					}
+					
+					if (loop.equals("2330B")) {
+						segments2330B.add(line);
+					}
+					
+					if (loop.equals("2400")) {
+						segments2400.add(line);
+					}
+					
+					if (loop.equals("2430")) {
+						segments2430.add(line);
+					}
+					
+					
+					
 					System.out.println("        ");
 					for (String ele : elements) {
 
@@ -132,14 +162,39 @@ public class Driver837 {
 			
 //			printLines(segments1000A);
 			
-			if (segments1000A != null ) {
-				loopsSegmentsMap.put("1000A", segments1000A);
-			}
+			pouplateSegments(segments1000A, segments1000B, segments2300, segments2330B, segments2400, segments2430, loopsSegmentsMap);
 			
-//			iterateLoopsAndSegments(loopsSegmentsMap);
+			iterateLoopsAndSegments(loopsSegmentsMap);
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static void pouplateSegments(List<String> segments1000A, List<String> segments1000B, List<String> segments2300,List<String> segments2330B,
+			List<String> segments2400, List<String> segments2430, HashMap<String, List<String>> loopsSegmentsMap) {
+		if (segments1000A != null ) {
+			loopsSegmentsMap.put("1000A", segments1000A);
+		}
+		
+		if (segments1000B != null ) {
+			loopsSegmentsMap.put("1000B", segments1000B);
+		}
+		
+		if (segments2300 != null ) {
+			loopsSegmentsMap.put("2300", segments2300);
+		}
+		
+		if (segments2330B != null ) {
+			loopsSegmentsMap.put("2330B", segments2330B);
+		}
+		
+		if (segments2400 != null ) {
+			loopsSegmentsMap.put("2400", segments2400);
+		}
+		
+		if (segments2430 != null ) {
+			loopsSegmentsMap.put("2430", segments2430);
 		}
 	}
 
@@ -155,7 +210,7 @@ public class Driver837 {
 	private static void iterateLoopsAndSegments(HashMap<String, List<String>> loopsToSegements) {
 		for (String key : loopsToSegements.keySet()) {
 			System.out.println("Key: " + key);
-			if (key.equals("1000A")) {
+			if (key.equals("2330B") || key.equals("2430")) {
 				loopsToSegements.get(key).stream().forEach(System.out::println);
 			}
 		}
