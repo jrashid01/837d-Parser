@@ -68,8 +68,6 @@ public class Driver837 {
 
 		System.out.println(loops.get("2300"));
 
-		HashMap<String, List<String>> loopsToSegements = new LinkedHashMap<>();
-
 		try {
 			List<String> allLines = Files
 					.readAllLines(Paths.get("C:/Users/rjilani/Documents/FEP/Payload/837-For-Demo/TC36.txt"));
@@ -79,6 +77,7 @@ public class Driver837 {
 			List<String> segments1000A = new ArrayList<>();
 			List<String> segments1000B = new ArrayList<>();
 			List<String> segments2300 = new ArrayList<>();
+			List<String> segments2320 = new ArrayList<>();
 			List<String> segments2400 = new ArrayList<>();
 			List<String> segments2430 = new ArrayList<>();
 			List<String> segments2330B = new ArrayList<>();
@@ -90,7 +89,10 @@ public class Driver837 {
 			String previousLoop = "1000A";
 			int i =0;
 			for (String line : allLines) {
-				if (line.startsWith("1") || line.startsWith("2")) {
+//				if (line.contains("0001ISA")) {
+//					System.out.println(line);
+//				}
+				if (line.startsWith("1") || line.startsWith("2") ) {
 
 					System.out
 							.println("------------------------------------------------------------------------------");
@@ -128,6 +130,10 @@ public class Driver837 {
 						segments2300.add(line);
 					}
 					
+					if (loop.equals("2320")) {
+						segments2320.add(line);
+					}
+					
 					if (loop.equals("2330B")) {
 						segments2330B.add(line);
 					}
@@ -162,7 +168,7 @@ public class Driver837 {
 			
 //			printLines(segments1000A);
 			
-			pouplateSegments(segments1000A, segments1000B, segments2300, segments2330B, segments2400, segments2430, loopsSegmentsMap);
+			pouplateSegments(segments1000A, segments1000B, segments2300, segments2320, segments2330B, segments2400, segments2430, loopsSegmentsMap);
 			
 			iterateLoopsAndSegments(loopsSegmentsMap);
 
@@ -171,7 +177,7 @@ public class Driver837 {
 		}
 	}
 
-	private static void pouplateSegments(List<String> segments1000A, List<String> segments1000B, List<String> segments2300,List<String> segments2330B,
+	private static void pouplateSegments(List<String> segments1000A, List<String> segments1000B, List<String> segments2300, List<String> segments2320, List<String> segments2330B,
 			List<String> segments2400, List<String> segments2430, HashMap<String, List<String>> loopsSegmentsMap) {
 		if (segments1000A != null ) {
 			loopsSegmentsMap.put("1000A", segments1000A);
@@ -183,6 +189,10 @@ public class Driver837 {
 		
 		if (segments2300 != null ) {
 			loopsSegmentsMap.put("2300", segments2300);
+		}
+		
+		if (segments2320 != null ) {
+			loopsSegmentsMap.put("2320", segments2320);
 		}
 		
 		if (segments2330B != null ) {
@@ -210,7 +220,7 @@ public class Driver837 {
 	private static void iterateLoopsAndSegments(HashMap<String, List<String>> loopsToSegements) {
 		for (String key : loopsToSegements.keySet()) {
 			System.out.println("Key: " + key);
-			if (key.equals("2330B") || key.equals("2430")) {
+			if (key.equals("2320") || key.equals("3430")) {
 				loopsToSegements.get(key).stream().forEach(System.out::println);
 			}
 		}

@@ -3,12 +3,14 @@ package com.abcbs.parser.dental;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Driver837P {
 
-	static HashMap<String, String> loops = new HashMap<>();
+	static final HashMap<String, String> loops = new HashMap<>();
 	static {
 
 		loops.put("1000A", "Submitter Name");
@@ -70,29 +72,105 @@ public class Driver837P {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("parsing 837 d file");
+		System.out.println("parsing 837 P file");
 
-		System.out.println(loops.get("2300"));
+		HashMap<String, List<String>> loopsToSegements = new LinkedHashMap<>();
 
 		try {
-			List<String> allLines = Files.readAllLines(
-					Paths.get("C:/Users/rjilani/Documents/FEP/Payload/837-For-Demo/EDI_Professional_2521307872.txt"));
+			List<String> allLines = Files
+					.readAllLines(Paths.get("C:/Users/rjilani/Documents/FEP/Payload/837-For-Demo/SPLIT.DENT.TXT"));
 
 			System.out.println("Lines in file:" + allLines.size());
 
+			List<String> segments1000A = new ArrayList<>();
+			List<String> segments1000B = new ArrayList<>();
+			
+			List<String> segments2000A = new ArrayList<>();
+			List<String> segments2010AA = new ArrayList<>();
+			
+			
+			List<String> segments2300 = new ArrayList<>();
+			List<String> segments2320 = new ArrayList<>();
+			List<String> segments2400 = new ArrayList<>();
+			List<String> segments2430 = new ArrayList<>();
+			List<String> segments2330B = new ArrayList<>();
+
+			HashMap<String, List<String>> loopsSegmentsMap = new LinkedHashMap<>();
+			String loop = "";
+			String previousLoop = "1000A";
+			int i = 0;
 			for (String line : allLines) {
+				
 				if (line.startsWith("1") || line.startsWith("2")) {
+
 					System.out
 							.println("------------------------------------------------------------------------------");
 
-					String loop = line.substring(0, 6).strip();
-					System.out.println("loop:" + loop + " " + loops.get(loop));
+					loop = line.substring(0, 6).strip();
+
+					if (!previousLoop.equals(loop)) {
+						System.out.println("previousLoop count: " + previousLoop + ":" + i);
+						System.out.println(
+								"------------------------------------------------------------------------------");
+						i = 0;
+						previousLoop = loop;
+						i = 1;
+					} else {
+						i++;
+					}
+
+					System.out.println(
+							"loop" + loop + " " + (loops.get(loop) != null ? loops.get(loop) : "not a valid loop"));
 
 					System.out.println("Line size:" + line.length());
 
 					String[] elements = line.split(" ");
 					System.out.println("total elements:" + elements.length);
 					System.out.println(line);
+					
+					if (loop.equals("1000A")) {
+						segments1000A.add(line);
+					}
+
+					if (loop.equals("1000B")) {
+						segments1000B.add(line);
+					}
+					
+					
+					
+					
+					
+					if (loop.equals("2000A")) {
+						segments2000A.add(line);
+					}
+
+					if (loop.equals("2010AA")) {
+						segments2010AA.add(line);
+					}
+					
+					
+					
+
+					if (loop.equals("2300")) {
+						segments2300.add(line);
+					}
+
+					if (loop.equals("2320")) {
+						segments2320.add(line);
+					}
+
+					if (loop.equals("2330B")) {
+						segments2330B.add(line);
+					}
+
+					if (loop.equals("2400")) {
+						segments2400.add(line);
+					}
+
+					if (loop.equals("2430")) {
+						segments2430.add(line);
+					}
+
 					System.out.println("        ");
 					for (String ele : elements) {
 
@@ -105,8 +183,79 @@ public class Driver837P {
 				}
 
 			}
+			System.out.println("------------------------------------------------------------------------------");
+			System.out.println("previousLoop count: " + previousLoop + ":" + i);
+			System.out.println("------------------------------------------------------------------------------");
+
+//			printLines(segments1000A);
+
+			pouplateSegments(segments1000A, segments1000B, segments2000A, segments2010AA, segments2300, segments2320, segments2330B, segments2400,
+					segments2430, loopsSegmentsMap);
+
+			iterateLoopsAndSegments(loopsSegmentsMap);
+
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static void pouplateSegments(List<String> segments1000A, List<String> segments1000B, List<String> segments2000A, List<String> segments2010AA,
+			List<String> segments2300, List<String> segments2320, List<String> segments2330B, List<String> segments2400,
+			List<String> segments2430, HashMap<String, List<String>> loopsSegmentsMap) {
+		if (segments1000A != null) {
+			loopsSegmentsMap.put("1000A", segments1000A);
+		}
+
+		if (segments1000B != null) {
+			loopsSegmentsMap.put("1000B", segments1000B);
+		}
+		
+		
+		if (segments2000A != null) {
+			loopsSegmentsMap.put("2000A", segments2000A);
+		}
+
+		if (segments2010AA != null) {
+			loopsSegmentsMap.put("2010AA", segments2010AA);
+		}
+		
+		
+
+		if (segments2300 != null) {
+			loopsSegmentsMap.put("2300", segments2300);
+		}
+
+		if (segments2320 != null) {
+			loopsSegmentsMap.put("2320", segments2320);
+		}
+
+		if (segments2330B != null) {
+			loopsSegmentsMap.put("2330B", segments2330B);
+		}
+
+		if (segments2400 != null) {
+			loopsSegmentsMap.put("2400", segments2400);
+		}
+
+		if (segments2430 != null) {
+			loopsSegmentsMap.put("2430", segments2430);
+		}
+	}
+
+	private static void printLines(List<String> segments) {
+		System.out.println("------------------------------------------------------------------------------");
+
+		for (String segment : segments) {
+			System.out.println(segment);
+		}
+	}
+
+	private static void iterateLoopsAndSegments(HashMap<String, List<String>> loopsToSegements) {
+		for (String key : loopsToSegements.keySet()) {
+			System.out.println("Key: " + key);
+			if (key.equals("2000A") || key.equals("2010AA")) {
+				loopsToSegements.get(key).stream().forEach(System.out::println);
+			}
 		}
 	}
 
